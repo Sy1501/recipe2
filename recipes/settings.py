@@ -117,7 +117,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CSRF_TRUSTED_ORIGINS = [
     'https://8000-sy1501-recipe2-z26oxwfnw1m.ws.codeinstitute-ide.net',
-    'https://*.herokuapp.com'
+    'https://*.herokuapp.com',
+    'https://*.gitpod.io'
 ]
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
