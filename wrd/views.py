@@ -1,26 +1,29 @@
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse
-from django.views.generic import ListView, TemplateView
+from django.views.generic import ListView, TemplateView, View
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from .models import Recipe
 
-class IndexView(TemplateView):
-    template_name = 'wrd/index.html'
+# class IndexView(TemplateView):
+#     model = Recipe
+#     template_name = 'index.html'
+#     context_object_name = 'recipes'
 
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+#     def get_queryset(self):
+#         return Recipe.objects.filter(status=1)
 
-def redirect_to_login(request):
-    return redirect(reverse('account_login'))
 
-class RecipeListView(ListView):
-    model = Recipe
-    template_name = 'wrd/index.html'
-    context_object_name = 'recipes'
+class IndexView(View):
+    
+    def get(self, request):
+        """ get request """
+        recipes = Recipe.objects.filter(status=1)
+        context = {
+            "recipes": recipes,
+        }
+        return render(request, 'index.html', context)
 
-    def get_queryset(self):
-        return Recipe.objects.filter(status=1)
+
 
 

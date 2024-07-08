@@ -16,13 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from wrd.views import redirect_to_login, IndexView
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),  
-    path('', IndexView.as_view(), name='home'),
-    path('wrd/', include('wrd.urls')),    
+     path('', include('wrd.urls')),  
 ]
 
 
