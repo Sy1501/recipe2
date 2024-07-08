@@ -3,21 +3,9 @@
 {% block title %}WMR Recipes{% endblock %}
 
 {% block content %}
-<h1>Recipe List</h1>
-    {% for recipe in recipes %}
-    <div class="recipe">
-        <h2>{{ recipe.title }}</h2>
-        <p><strong>Excerpt:</strong> {{ recipe.excerpt }}</p>
-        <p><strong>Author:</strong> {{ recipe.author }}</p>
-        <p><strong>Created at:</strong> {{ recipe.created_at }}</p>
-        <p><strong>Updated at:</strong> {{ recipe.updated_at }}</p>
-        <h3>Ingredients</h3>
-        <p>{{ recipe.ingredients }}</p>
-        <h3>Method</h3>
-        <p>{{ recipe.method }}</p>
-    </div>
-    <hr>
-    {% empty %}
-    <p>No recipes available.</p>
-    {% endfor %}
+<h1>Recipes:</h1>
+
+{% empty %}
+<p>No recipes available.</p>
+{% endfor %}
 {% endblock %}
