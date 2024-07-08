@@ -22,8 +22,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),  
     path('', IndexView.as_view(), name='home'),
-    path("", include("wrd.urls"), name="wrd-urls"),   
+    path('wrd/', include('wrd.urls')),    
 ]
+
 
 
 

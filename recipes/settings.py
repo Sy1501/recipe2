@@ -81,11 +81,6 @@ DATABASES = {
 }
 
 
-CSRF_TRUSTED_ORIGINS = [
-    "https://*.https://gitpod.io",
-    "https://*.herokuapp.com"
-]
-
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 AUTH_PASSWORD_VALIDATORS = [
@@ -116,9 +111,8 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://8000-sy1501-recipe2-z26oxwfnw1m.ws.codeinstitute-ide.net',
+    'https://*.codeinstitute-ide.net',
     'https://*.herokuapp.com',
-    'https://*.gitpod.io'
 ]
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"

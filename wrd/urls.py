@@ -4,7 +4,6 @@ from wrd.views import redirect_to_login
 from . import views
 
 urlpatterns = [
+    path('', views.RecipeListView.as_view(), name='post-list'), 
     path('accounts/', include('allauth.urls')),  
-    path('', redirect_to_login, name='home'),
-    path('', views.PostList.as_view(), name='home'),   
 ]
