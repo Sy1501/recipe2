@@ -14,6 +14,8 @@ from .models import Recipe
 #     def get_queryset(self):
 #         return Recipe.objects.filter(status=1)
 
+def home(request):
+    return render(request, 'index.html')       
 
 class RecipeView(View):
     
@@ -25,8 +27,6 @@ class RecipeView(View):
         }
         return render(request, 'recipe.html', context)
 
-def home(request):
-    return render(request, 'index.html')       
 
 
 
