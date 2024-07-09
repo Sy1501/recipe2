@@ -5,6 +5,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from .models import Recipe
 
+
 # class IndexView(TemplateView):
 #     model = Recipe
 #     template_name = 'index.html'
@@ -14,7 +15,7 @@ from .models import Recipe
 #         return Recipe.objects.filter(status=1)
 
 
-class IndexView(View):
+class RecipeView(View):
     
     def get(self, request):
         """ get request """
@@ -23,6 +24,9 @@ class IndexView(View):
             "recipes": recipes,
         }
         return render(request, 'recipe.html', context)
+
+def home(request):
+    return render(request, 'index.html')       
 
 
 
