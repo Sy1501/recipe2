@@ -17,16 +17,15 @@ from .models import Recipe
 def home(request):
     return render(request, 'index.html')       
 
-class RecipeView(View):
-    
-    def get(self, request):
-        """ get request """
-        recipes = Recipe.objects.filter(status=1)
-        context = {
-            "recipes": recipes,
-        }
-        return render(request, 'recipe.html', context)
 
+class RecipeView(ListView):
+    model = Recipe
+    template_name = 'recipe.html'
+    context_object_name = 'recipes'
+    paginate_by = 3
+
+    def get_queryset(self):
+        return Recipe.objects.filter(status=1)
 
 
 
