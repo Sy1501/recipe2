@@ -22,7 +22,7 @@ class RecipeView(ListView):
     model = Recipe
     template_name = 'recipe.html'
     context_object_name = 'recipes'
-    paginate_by = 3
+    paginate_by = 2
 
     def get_queryset(self):
         return Recipe.objects.filter(status=1)
