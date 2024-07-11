@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.views.generic import ListView, TemplateView, View
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from .models import Recipe
 from .forms import CommentForm
 
@@ -28,6 +29,7 @@ class RecipeView(ListView):
     def get_queryset(self):
         return Recipe.objects.filter(status=1)
 
+
 def recipe_detail(request, slug):
     
     
@@ -35,7 +37,7 @@ def recipe_detail(request, slug):
     recipe = get_object_or_404(queryset, slug=slug)
     comments = recipe.comments.all().order_by("-created_on")
     comment_count = recipe.comments.filter(approved=True).count()
-    if request.method == "Recipe":
+    if request.method == "POST":
         comment_form = CommentForm(data=request.POST)
         if comment_form.is_valid():
             comment = comment_form.save(commit=False)

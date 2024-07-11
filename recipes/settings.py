@@ -61,6 +61,9 @@ LOGOUT_REDIRECT_URL = '/'
 
 ROOT_URLCONF = 'recipes.urls'
 
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
