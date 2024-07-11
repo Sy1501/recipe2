@@ -1,4 +1,4 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse
 from django.views.generic import ListView, TemplateView, View
 from django.utils.decorators import method_decorator
@@ -26,6 +26,13 @@ class RecipeView(ListView):
 
     def get_queryset(self):
         return Recipe.objects.filter(status=1)
+
+def recipe_detail(request, slug):
+    
+    
+    queryset = Recipe.objects.filter(status=1)
+    recipe = get_object_or_404(queryset, slug=slug)
+    return render(request, "recipe_detail.html", {"recipe": recipe},)
 
 
 
