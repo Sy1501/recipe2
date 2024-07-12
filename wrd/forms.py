@@ -9,7 +9,7 @@ class CommentForm(forms.ModelForm):
 class RecipeForm(forms.ModelForm):
     class Meta:
         model = Recipe
-        fields = ['title', 'slug', 'ingredients', 'method', 'excerpt', 'status']
+        fields = ['title', 'slug', 'ingredients', 'method', 'excerpt']  
         widgets = {
             'ingredients': forms.Textarea(attrs={'rows': 5}),
             'method': forms.Textarea(attrs={'rows': 10}),
@@ -21,3 +21,10 @@ class RecipeForm(forms.ModelForm):
         if Recipe.objects.filter(slug=slug).exists():
             raise forms.ValidationError("A recipe with this slug already exists. Please choose a unique slug.")
         return slug
+
+    def save(self, commit=True):
+        instance = super(RecipeForm, self).save(commit=False)
+        instance.status = 0  
+        if commit:
+            instance.save()
+        return instance

@@ -8,7 +8,6 @@ from .models import Recipe
 from .forms import CommentForm, RecipeForm
 
 
-
 def home(request):
     return render(request, 'index.html')       
 
@@ -17,15 +16,13 @@ class RecipeView(ListView):
     model = Recipe
     template_name = 'recipe.html'
     context_object_name = 'recipes'
-    paginate_by = 2
+    paginate_by = 3
 
     def get_queryset(self):
         return Recipe.objects.filter(status=1)
 
 
 def recipe_detail(request, slug):
-    
-    
     queryset = Recipe.objects.filter(status=1)
     recipe = get_object_or_404(queryset, slug=slug)
     comments = recipe.comments.all().order_by("-created_on")
@@ -44,7 +41,6 @@ def recipe_detail(request, slug):
     
     comment_form = CommentForm()
     
-    
     return render(
         request,
         "recipe_detail.html",
@@ -57,17 +53,17 @@ def recipe_detail(request, slug):
     )
 
 
+
 def add_recipe(request):
     if request.method == 'POST':
         form = RecipeForm(request.POST)
         if form.is_valid():
             recipe = form.save(commit=False)
             recipe.author = request.user
+            recipe.status = 0 
             recipe.save()
-            messages.success(request, 'Your recipe has been added successfully!')
+            messages.success(request, 'Your recipe has been added successfully and is awaiting approval.')
             return redirect('recipe_detail', slug=recipe.slug)
     else:
         form = RecipeForm()
     return render(request, 'add_recipe.html', {'form': form})
-
-
