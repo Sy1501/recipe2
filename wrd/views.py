@@ -5,16 +5,9 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Recipe
-from .forms import CommentForm
+from .forms import CommentForm, RecipeForm
 
 
-# class IndexView(TemplateView):
-#     model = Recipe
-#     template_name = 'index.html'
-#     context_object_name = 'recipes'
-
-#     def get_queryset(self):
-#         return Recipe.objects.filter(status=1)
 
 def home(request):
     return render(request, 'index.html')       
@@ -64,5 +57,17 @@ def recipe_detail(request, slug):
     )
 
 
+def add_recipe(request):
+    if request.method == 'POST':
+        form = RecipeForm(request.POST)
+        if form.is_valid():
+            recipe = form.save(commit=False)
+            recipe.author = request.user
+            recipe.save()
+            messages.success(request, 'Your recipe has been added successfully!')
+            return redirect('recipe_detail', slug=recipe.slug)
+    else:
+        form = RecipeForm()
+    return render(request, 'add_recipe.html', {'form': form})
 
 

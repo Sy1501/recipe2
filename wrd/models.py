@@ -32,4 +32,6 @@ class Comment(models.Model):
         ordering = ["created_on"]
 
     def __str__(self):
-        return f'Comment by {self.body} on {self.author}'
+        return f'Comment by {self.author} on {self.recipe.title}'
+
+        
