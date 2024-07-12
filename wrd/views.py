@@ -4,13 +4,12 @@ from django.views.generic import ListView, TemplateView, View
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import Recipe
+from django.http import HttpResponseForbidden
+from .models import Recipe, Comment
 from .forms import CommentForm, RecipeForm
-
 
 def home(request):
     return render(request, 'index.html')       
-
 
 class RecipeView(ListView):
     model = Recipe
@@ -20,7 +19,6 @@ class RecipeView(ListView):
 
     def get_queryset(self):
         return Recipe.objects.filter(status=1)
-
 
 def recipe_detail(request, slug):
     queryset = Recipe.objects.filter(status=1)
@@ -53,7 +51,6 @@ def recipe_detail(request, slug):
     )
 
 
-
 def add_recipe(request):
     if request.method == 'POST':
         form = RecipeForm(request.POST)
@@ -67,3 +64,66 @@ def add_recipe(request):
     else:
         form = RecipeForm()
     return render(request, 'add_recipe.html', {'form': form})
+
+
+def edit_recipe(request, slug):
+    recipe = get_object_or_404(Recipe, slug=slug)
+    if request.user != recipe.author and not request.user.is_staff:
+        return HttpResponseForbidden("You don't have permission to edit this recipe.")
+    
+    if request.method == 'POST':
+        form = RecipeForm(request.POST, instance=recipe)
+        if form.is_valid():
+            recipe = form.save(commit=False)
+            recipe.status = 0  
+            recipe.save()
+            messages.success(request, 'Your recipe has been updated and is awaiting approval.')
+            return redirect('recipe_detail', slug=recipe.slug)
+    else:
+        form = RecipeForm(instance=recipe)
+    return render(request, 'edit_recipe.html', {'form': form, 'recipe': recipe})
+
+
+def delete_recipe(request, slug):
+    recipe = get_object_or_404(Recipe, slug=slug)
+    if request.user != recipe.author and not request.user.is_staff:
+        return HttpResponseForbidden("You don't have permission to delete this recipe.")
+    
+    if request.method == 'POST':
+        recipe.delete()
+        messages.success(request, 'Your recipe has been deleted.')
+        return redirect('recipes')
+    
+    return render(request, 'delete_recipe.html', {'recipe': recipe})
+
+
+def edit_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    if request.user != comment.author and not request.user.is_staff:
+        return HttpResponseForbidden("You don't have permission to edit this comment.")
+    
+    if request.method == 'POST':
+        form = CommentForm(request.POST, instance=comment)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.approved = False  
+            comment.save()
+            messages.success(request, 'Your comment has been updated and is awaiting approval.')
+            return redirect('recipe_detail', slug=comment.recipe.slug)
+    else:
+        form = CommentForm(instance=comment)
+    return render(request, 'edit_comment.html', {'form': form, 'comment': comment})
+
+
+def delete_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    if request.user != comment.author and not request.user.is_staff:
+        return HttpResponseForbidden("You don't have permission to delete this comment.")
+    
+    if request.method == 'POST':
+        recipe_slug = comment.recipe.slug
+        comment.delete()
+        messages.success(request, 'Your comment has been deleted.')
+        return redirect('recipe_detail', slug=recipe_slug)
+    
+    return render(request, 'delete_comment.html', {'comment': comment})
