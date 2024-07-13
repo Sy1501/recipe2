@@ -8,8 +8,10 @@ from django.http import HttpResponseForbidden
 from .models import Recipe, Comment
 from .forms import CommentForm, RecipeForm
 
+
 def home(request):
     return render(request, 'index.html')       
+
 
 class RecipeView(ListView):
     model = Recipe
@@ -19,6 +21,7 @@ class RecipeView(ListView):
 
     def get_queryset(self):
         return Recipe.objects.filter(status=1)
+
 
 def recipe_detail(request, slug):
     queryset = Recipe.objects.filter(status=1)
@@ -51,6 +54,7 @@ def recipe_detail(request, slug):
     )
 
 
+@login_required
 def add_recipe(request):
     if request.method == 'POST':
         form = RecipeForm(request.POST)
@@ -60,7 +64,7 @@ def add_recipe(request):
             recipe.status = 0 
             recipe.save()
             messages.success(request, 'Your recipe has been added successfully and is awaiting approval.')
-            return redirect('recipe_detail', slug=recipe.slug)
+            return redirect('home')  # Redirect to home page
     else:
         form = RecipeForm()
     return render(request, 'add_recipe.html', {'form': form})
