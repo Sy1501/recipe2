@@ -55,16 +55,19 @@ def recipe_detail(request, slug):
     )
 
 
-
 def add_recipe(request):
     if request.method == 'POST':
         form = RecipeForm(request.POST)
         if form.is_valid():
             recipe = form.save(commit=False)
             recipe.author = request.user
-            recipe.status = 0 
+            recipe.status = 0  
+            
+            
+            recipe.ingredients = recipe.ingredients.strip()
+            recipe.method = recipe.method.strip()
 
-            # Auto-generate slug
+            
             base_slug = slugify(recipe.title)
             unique_slug = base_slug
             num = 1
@@ -75,11 +78,10 @@ def add_recipe(request):
 
             recipe.save()
             messages.success(request, 'Your recipe has been added successfully and is awaiting approval.')
-            return redirect('home')  # Redirect to home page
+            return redirect('home')  
     else:
         form = RecipeForm()
     return render(request, 'add_recipe.html', {'form': form})
-
 
 def edit_recipe(request, slug):
     recipe = get_object_or_404(Recipe, slug=slug)
@@ -91,12 +93,18 @@ def edit_recipe(request, slug):
         if form.is_valid():
             recipe = form.save(commit=False)
             recipe.status = 0  
+
+            
+            recipe.ingredients = recipe.ingredients.strip()
+            recipe.method = recipe.method.strip()
+
             recipe.save()
             messages.success(request, 'Your recipe has been updated and is awaiting approval.')
-            return redirect('recipe_detail', slug=recipe.slug)
+            return redirect('home')  
     else:
         form = RecipeForm(instance=recipe)
     return render(request, 'edit_recipe.html', {'form': form, 'recipe': recipe})
+
 
 
 def delete_recipe(request, slug):
