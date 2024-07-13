@@ -9,7 +9,7 @@ class CommentForm(forms.ModelForm):
 class RecipeForm(forms.ModelForm):
     class Meta:
         model = Recipe
-        fields = ['title', 'slug', 'ingredients', 'method', 'excerpt']  
+        fields = ['title', 'ingredients', 'method', 'excerpt']  
         widgets = {
             'ingredients': forms.Textarea(attrs={'rows': 5}),
             'method': forms.Textarea(attrs={'rows': 10}),

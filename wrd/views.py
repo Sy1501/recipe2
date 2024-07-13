@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.http import HttpResponseForbidden
 from .models import Recipe, Comment
 from .forms import CommentForm, RecipeForm
+from django.utils.text import slugify
 
 
 def home(request):
@@ -54,7 +55,7 @@ def recipe_detail(request, slug):
     )
 
 
-@login_required
+
 def add_recipe(request):
     if request.method == 'POST':
         form = RecipeForm(request.POST)
@@ -62,6 +63,16 @@ def add_recipe(request):
             recipe = form.save(commit=False)
             recipe.author = request.user
             recipe.status = 0 
+
+            # Auto-generate slug
+            base_slug = slugify(recipe.title)
+            unique_slug = base_slug
+            num = 1
+            while Recipe.objects.filter(slug=unique_slug).exists():
+                unique_slug = f"{base_slug}-{num}"
+                num += 1
+            recipe.slug = unique_slug
+
             recipe.save()
             messages.success(request, 'Your recipe has been added successfully and is awaiting approval.')
             return redirect('home')  # Redirect to home page
