@@ -1,127 +1,254 @@
+
 {% extends 'base.html' %}
+
 {% block content %}
+
 {% load static %}
+
 {% load crispy_forms_tags %}
 
+
+
 <div class="masthead">
+
     <div class="container">
+
         <div class="row g-0">
+
             <div class="col-md-12 masthead-text text-center">
+
                 <h1 class="recipe-title">{{ recipe.title }}</h1>
+
                 <p class="recipe-subtitle">{{ recipe.author }} | {{ recipe.created_at }}</p>
+
             </div>
+
         </div>
+
     </div>
+
 </div>
 
+
+
 <div class="container">
+
     <div class="row justify-content-center mb-4">
+
         <div class="col-md-8">
+
             <img src="{% static 'images/default.jpg' %}" class="img-fluid" alt="Recipe Image">
+
         </div>
+
     </div>
+
 </div>
 
+
+
 <div class="container">
+
     <div class="row">
+
         <div class="col card mb-4  mt-3 left  top">
+
             <div class="card-body">
+
                 <h2 class="card-title">Ingredients</h2>
+
                 <ul class="card-text">
+
                     {% for ingredient in recipe.ingredients.splitlines %}
+
                         <li>{{ ingredient }}</li>
+
                     {% endfor %}
+
                 </ul>
+
             </div>
+
         </div>
+
     </div>
+
 </div>
 
+
+
 <div class="container">
+
     <div class="row">
+
         <div class="col card mb-4  mt-3 left  top">
+
             <div class="card-body">
+
                 <h2 class="card-title">Method</h2>
+
                 <ol class="card-text">
+
                     {% for step in recipe.method.splitlines %}
+
                         <li>{{ step }}</li>
+
                     {% endfor %}
+
                 </ol>
+
             </div>
+
         </div>
+
     </div>
+
     
+
     <!-- Displaying count of comments -->
+
     <div class="row">
+
         <div class="col-12">
+
             <strong class="text-secondary">
+
                 <i class="far fa-comments"></i> {{ comment_count }}
+
             </strong>
+
         </div>
+
         <div class="col-12">
+
             <hr>
+
         </div>
+
     </div>
+
     
+
     <!-- Displaying Comments -->
+
     <div class="row">
+
         <div class="col-md-8 card mb-4  mt-3 ">
+
             <h3>Comments:</h3>
+
             <div class="card-body">
+
                 {% for comment in comments %}
+
                 <div class="p-2 comments
+
                     {% if not comment.approved and comment.author == user %}
+
                     faded{% elif not comment.approved %} d-none{% endif %}">
+
                     <p class="font-weight-bold">
+
                         {{ comment.author }}
+
                         <span class="font-weight-normal">
+
                             {{ comment.created_on }}
+
                         </span> wrote:
+
                     </p>
+
                     <div id="comment{{ comment.id }}">
+
                         {{ comment.body | linebreaks }}
+
                     </div>
+
                     {% if not comment.approved and comment.author == user %}
+
                     <p class="approval">
+
                         This comment is awaiting approval
+
                     </p>
+
                     {% endif %}
+
                     {% if user == comment.author or user.is_staff %}
+
                         <a href="{% url 'edit_comment' comment.id %}" class="btn btn-sm btn-primary">Edit</a>
+
                         <a href="{% url 'delete_comment' comment.id %}" class="btn btn-sm btn-danger">Delete</a>
+
                     {% endif %}
+
                 </div>
+
                 {% endfor %}
+
             </div>
+
         </div>
+
         
+
         <!-- Creating New Comments -->
+
         <div class="col-md-4 card mb-4 mt-3">
+
             <div class="card-body">
+
                 {% if user.is_authenticated %}
+
                 <h3>Leave a comment:</h3>
+
                 <p>Posting as: {{ user.username }}</p>
+
                 <form id="commentForm" method="post" style="margin-top: 1.3em;">
+
                     {{ comment_form | crispy }}
+
                     {% csrf_token %}
+
                     <button id="submitButton" type="submit" class="btn btn-signup btn-lg">Submit</button>
+
                 </form>
+
                 {% else %}
+
                 <p>Log in to leave a comment</p>
+
                 {% endif %}
+
             </div>
+
         </div>
+
     </div>
+
+
 
     <!-- Edit and Delete Recipe Buttons -->
+
     {% if user == recipe.author or user.is_staff %}
+
     <div class="row mt-4 mb-4">
+
         <div class="col-12 text-center">
+
             <a href="{% url 'edit_recipe' recipe.slug %}" class="btn btn-primary">Edit Recipe</a>
+
             <a href="{% url 'delete_recipe' recipe.slug %}" class="btn btn-danger">Delete Recipe</a>
+
         </div>
+
     </div>
+
     {% endif %}
+
 </div>
+
+
 
 {% endblock %}
