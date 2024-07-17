@@ -161,13 +161,32 @@ body {
     color: rgb(222, 146, 168);
 }
 
-/* home */
+.home-container {
+    background-image: url('{% static "images/cooking-background.png" %}');
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    color: white;
+}
+
+.content-wrapper {
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 2rem;
+    border-radius: 10px;
+}
+
+.home-title {
+    font-size: 3rem;
+    margin-bottom: 2rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
 
 
-
-
-
-
-
-
-
+.card-title {
+    text-align: center;
+}
